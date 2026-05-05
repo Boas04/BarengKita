@@ -20,7 +20,6 @@ class AppTheme {
         primary: primaryPurple,
         secondary: softPink,
         surface: Colors.white,
-        background: backgroundGrey,
       ),
       textTheme: GoogleFonts.nunitoTextTheme(
         ThemeData.light().textTheme,

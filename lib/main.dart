@@ -20,12 +20,6 @@ class BarengKitaApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const MainNavigator(),
-      routes: {
-        '/home': (context) => const HomeScreen(),
-        '/emergency': (context) => const EmergencyScreen(),
-        '/counseling': (context) => const CounselingScreen(),
-        '/resources': (context) => const ResourcesScreen(),
-      },
     );
   }
 }
@@ -40,23 +34,27 @@ class MainNavigator extends StatefulWidget {
 class _MainNavigatorState extends State<MainNavigator> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    HomeScreen(),
-    EmergencyScreen(),
-    CounselingScreen(),
-    ResourcesScreen(),
-  ];
+  void _switchTab(int index) {
+    setState(() => _currentIndex = index);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final screens = [
+      HomeScreen(onNavigateToTab: _switchTab),
+      const EmergencyScreen(),
+      const CounselingScreen(),
+      const ResourcesScreen(),
+    ];
+
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: _screens,
+        children: screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        onTap: _switchTab,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: AppTheme.primaryPurple,
         unselectedItemColor: Colors.grey,

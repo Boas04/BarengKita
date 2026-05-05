@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final void Function(int tabIndex) onNavigateToTab;
+
+  const HomeScreen({super.key, required this.onNavigateToTab});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 24),
               _buildSectionTitle('Layanan Kami'),
               const SizedBox(height: 16),
-              _buildServiceCards(context),
+              _buildServiceCards(),
               const SizedBox(height: 24),
               _buildSectionTitle('Tentang BarengKita'),
               const SizedBox(height: 12),
@@ -71,9 +73,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildEmergencyBanner(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // Navigate to emergency tab (handled by parent navigator)
-      },
+      onTap: () => onNavigateToTab(1),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(20),
@@ -132,7 +132,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildServiceCards(BuildContext context) {
+  Widget _buildServiceCards() {
     final services = [
       _ServiceCardData(
         icon: Icons.emergency,
@@ -169,7 +169,10 @@ class HomeScreen extends StatelessWidget {
       itemCount: services.length,
       itemBuilder: (context, index) {
         final service = services[index];
-        return _ServiceCard(data: service);
+        return _ServiceCard(
+          data: service,
+          onTap: () => onNavigateToTab(service.tabIndex),
+        );
       },
     );
   }
@@ -256,14 +259,15 @@ class _ServiceCardData {
 
 class _ServiceCard extends StatelessWidget {
   final _ServiceCardData data;
+  final VoidCallback onTap;
 
-  const _ServiceCard({required this.data});
+  const _ServiceCard({required this.data, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: () {},
+        onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(12),
